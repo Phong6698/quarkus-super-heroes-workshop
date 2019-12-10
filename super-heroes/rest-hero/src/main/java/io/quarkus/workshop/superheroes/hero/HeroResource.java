@@ -36,8 +36,7 @@ public class HeroResource {
 
     @GET
     @Path("/{id}")
-    public Response getHero(
-        @PathParam("id") Long id) {
+    public Response getHero(@PathParam("id") Long id) {
         Hero hero = heroService.findHeroById(id);
         if (hero != null) {
             LOGGER.debug("Found hero " + hero);
@@ -49,8 +48,7 @@ public class HeroResource {
     }
 
     @POST
-    public Response createHero(
-        @Valid Hero hero, @Context UriInfo uriInfo) {
+    public Response createHero(@Valid Hero hero, @Context UriInfo uriInfo) {
         hero = heroService.persistHero(hero);
         UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(Long.toString(hero.id));
         LOGGER.debug("New hero created with URI " + builder.build().toString());
@@ -58,8 +56,7 @@ public class HeroResource {
     }
 
     @PUT
-    public Response updateHero(
-        @Valid Hero hero) {
+    public Response updateHero(@Valid Hero hero) {
         hero = heroService.updateHero(hero);
         LOGGER.debug("Hero updated with new valued " + hero);
         return Response.ok(hero).build();
@@ -67,8 +64,7 @@ public class HeroResource {
 
     @DELETE
     @Path("/{id}")
-    public Response deleteHero(
-        @PathParam("id") Long id) {
+    public Response deleteHero(@PathParam("id") Long id) {
         heroService.deleteHero(id);
         LOGGER.debug("Hero deleted with " + id);
         return Response.noContent().build();

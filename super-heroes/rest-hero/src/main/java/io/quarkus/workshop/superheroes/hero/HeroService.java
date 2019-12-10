@@ -1,5 +1,7 @@
 package io.quarkus.workshop.superheroes.hero;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -10,6 +12,9 @@ import static javax.transaction.Transactional.TxType.SUPPORTS;
 @ApplicationScoped
 @Transactional(Transactional.TxType.REQUIRED)
 public class HeroService {
+
+    @ConfigProperty(name = "level.multiplier", defaultValue="1")
+    int levelMultiplier;
 
     @Transactional(SUPPORTS)
     public List<Hero> findAllHeroes() {
@@ -31,6 +36,7 @@ public class HeroService {
     }
 
     public Hero persistHero(@Valid Hero hero) {
+        hero.level = hero.level * levelMultiplier;
         Hero.persist(hero);
         return hero;
     }
