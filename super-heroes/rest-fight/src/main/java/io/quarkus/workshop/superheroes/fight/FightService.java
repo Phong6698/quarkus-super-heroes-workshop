@@ -1,8 +1,14 @@
 package io.quarkus.workshop.superheroes.fight;
 
+import io.quarkus.workshop.superheroes.fight.client.Hero;
+import io.quarkus.workshop.superheroes.fight.client.HeroService;
+import io.quarkus.workshop.superheroes.fight.client.Villain;
+import io.quarkus.workshop.superheroes.fight.client.VillainService;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +33,14 @@ public class FightService {
         return Fight.findById(id);
     }
 
+    @Inject
+    @RestClient
+    HeroService heroService;
+
+    @Inject
+    @RestClient
+    VillainService villainService;
+
     @Transactional(REQUIRED)
     public Fight persistFight(Fighters fighters) {
         // Amazingly fancy logic to determine the winner...
@@ -48,9 +62,21 @@ public class FightService {
         return fight;
     }
 
-    public Fighters findRandomFighters() {
-        // Will be implemented later
-        return null;
+    Fighters findRandomFighters() {
+        Hero hero = findRandomHero();
+        Villain villain = findRandomVillain();
+        Fighters fighters = new Fighters();
+        fighters.hero = hero;
+        fighters.villain = villain;
+        return fighters;
+    }
+
+    private Hero findRandomHero() {
+        return heroService.findRandomHero();
+    }
+
+    private Villain findRandomVillain() {
+        return villainService.findRandomVillain();
     }
 
 
